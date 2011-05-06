@@ -1,15 +1,21 @@
 function! SelectComment()
-  let curindent = indent(".")
-  " Technically will allow for false positives with any multichar comments
-  let commstr = &commentstring[0]
+
+  " TODO: What happens if a , or : is used in a comment-indicator?
+  let comment_indicators=map(split(&com, ","),  'split(v:val, ":")[-1]')
+
+  " Creates a regular expression that matches any line that starts with a
+  " comment indicator.
+  "
+  " TODO: Handle the "f" flag and the "b" flag.
+  let comment_regex="\\V\\^ \\*\\(" . join(map(comment_indicators, 'escape(v:val, "\\")'), "\\|") . "\\)"
 
   " bail if not a comment
-  if getline(".")[curindent] != commstr
+  if match(getline("."), comment_regex) == -1
     return 
   endif
 
   " find the first commented line
-  while line(".") - 1 && indent(line(".") - 1) == curindent && getline(line(".") - 1)[curindent] == commstr
+  while line(".") - 1 && match(getline(line(".") - 1), comment_regex) > -1
     normal k
   endwhile
 
@@ -17,7 +23,7 @@ function! SelectComment()
   normal V
 
   " find the last commented line
-  while line(".") < line("$") && indent(line(".") + 1) == curindent && getline(line(".") + 1)[curindent] == commstr
+  while line(".") < line("$") &&  match(getline(line(".") + 1), comment_regex) > -1
     normal j
   endwhile
 endfunction
