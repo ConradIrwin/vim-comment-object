@@ -22,5 +22,10 @@ function! SelectComment()
   endwhile
 endfunction
 
+vnoremap ac :<C-U>silent! call SelectComment()<CR>
+omap ac :normal vic<CR>
+
+" TODO: In the case that a comment has different start and end delimeters from
+" its extension character, we should exclude those lines.
 vnoremap ic :<C-U>silent! call SelectComment()<CR>
 omap ic :normal vic<CR>
