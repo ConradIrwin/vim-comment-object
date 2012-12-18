@@ -7,7 +7,7 @@ function! SelectComment()
   " comment indicator.
   "
   " TODO: Handle the "f" flag and the "b" flag.
-  let comment_regex="\\V\\^ \\*\\(" . join(map(comment_indicators, 'escape(v:val, "\\")'), "\\|") . "\\)"
+  let comment_regex="\\V\\^\\s\\*\\(" . join(map(comment_indicators, 'escape(v:val, "\\")'), "\\|") . "\\)"
 
   " bail if not a comment
   if match(getline("."), comment_regex) == -1
